@@ -1,22 +1,20 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import React from 'react';
+import { Container } from 'react-bootstrap';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from './firebase';
+import Login from './components/Login';
+import Chat from './components/Chat';
+import Header from './components/Header';
 
-const queryClient = new QueryClient();
+const App: React.FC = () => {
+  const [user] = useAuthState(auth);
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  return (
+    <Container fluid className="p-0">
+      <Header />
+      {user ? <Chat /> : <Login />}
+    </Container>
+  );
+};
 
 export default App;
