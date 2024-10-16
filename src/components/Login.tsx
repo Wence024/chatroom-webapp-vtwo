@@ -1,76 +1,76 @@
 import React, { useState } from 'react';
-import { Button, Card, Form, Alert, Container } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Button, Container, Form } from 'react-bootstrap';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
-import "../styles/Auth.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      setError('');
-      setLoading(true);
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      if (isSignUp) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: name });
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
     } catch (error) {
-      console.error("Login error:", error);
-      setError("Login failed. Please try again.");
+      console.error("Authentication error:", error);
+      alert("Authentication failed. Please try again.");
     }
-    setLoading(false);
   };
 
   return (
-    <>
-      <Container className="d-flex align-items-center justify-content-center auth--container">
-        <div className="w-100 auth--div">
-          <Card>
-            <Card.Body>
-              <h2 className="text-center mb-4">Login</h2>
-              {error && <Alert variant="danger">{error}</Alert>}
-              <Form onSubmit={handleLogin}>
-                <Form.Group id="email" className="mb-3">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    autoComplete="email"
-                  />
-                </Form.Group>
-                <Form.Group id="password" className="mb-3">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    autoComplete="current-password"
-                  />
-                </Form.Group>
-                <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
-                  Log In
-                </Button>
-              </Form>
-              <div className="w-100 text-center mt-2">
-                Need an account? <Link to="/signup">Sign Up</Link>
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
-      </Container>
-    </>
+    <Container className="mt-5">
+      <h2 className="text-center mb-4">Welcome to Real-Time Chat</h2>
+      <Form onSubmit={handleAuth} className="d-flex flex-column align-items-center">
+        {isSignUp && (
+          <Form.Group className="mb-3" controlId="formBasicName">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </Form.Group>
+        )}
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit" className="mb-3">
+          {isSignUp ? 'Sign Up' : 'Sign In'}
+        </Button>
+
+        <Button variant="link" onClick={() => setIsSignUp(!isSignUp)}>
+          {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
+        </Button>
+      </Form>
+    </Container>
   );
 };
 
