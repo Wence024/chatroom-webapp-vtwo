@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, ListGroup } from 'react-bootstrap';
-import { collection, addDoc, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
+import { ref, push, query, orderByChild, limitToLast, onValue } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, db } from '../firebase';
+import { auth, realtimeDb } from '../firebase';
 
 interface Message {
   id: string;
   text: string;
   uid: string;
-  createdAt: any;
+  createdAt: number;
 }
 
 const Chat: React.FC = () => {
@@ -16,22 +16,24 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
+  // Fetch messages from Firebase Realtime Database using its APIs
   useEffect(() => {
-    const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'), limit(50));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const messages = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Message));
-      setMessages(messages.reverse());
+    const messagesRef = query(ref(realtimeDb, 'messages'), orderByChild('createdAt'), limitToLast(50));
+    const unsubscribe = onValue(messagesRef, (snapshot) => {
+      const data = snapshot.val();
+      const messages = data ? Object.entries(data).map(([id, msg]) => ({ id, ...msg as Message })) : [];
+      setMessages(messages);
     });
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    await addDoc(collection(db, 'messages'), {
+    await push(ref(realtimeDb, 'messages'), {
       text: newMessage,
-      createdAt: new Date(),
+      createdAt: Date.now(),
       uid: user?.uid,
     });
 
