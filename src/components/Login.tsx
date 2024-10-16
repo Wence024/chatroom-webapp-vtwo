@@ -27,8 +27,8 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Container className="d-flex align-items-center justify-content-center app--container">
-        <div className="w-100 app--div">
+      <Container className="d-flex align-items-center justify-content-center auth--container">
+        <div className="w-100 auth--div">
           <Card>
             <Card.Body>
               <h2 className="text-center mb-4">Login</h2>
