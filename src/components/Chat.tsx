@@ -8,38 +8,33 @@ interface Message {
   id: string;
   text: string;
   uid: string;
-  displayName: string;
   createdAt: number;
 }
 
-interface ChatProps {
-  roomId: string;
-}
-
-const Chat: React.FC<ChatProps> = ({ roomId }) => {
+const Chat: React.FC = () => {
   const [user] = useAuthState(auth);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
+  // Fetch messages from Firebase Realtime Database using its APIs
   useEffect(() => {
-    const messagesRef = query(ref(realtimeDb, `messages/${roomId}`), orderByChild('createdAt'), limitToLast(50));
+    const messagesRef = query(ref(realtimeDb, 'messages'), orderByChild('createdAt'), limitToLast(50));
     const unsubscribe = onValue(messagesRef, (snapshot) => {
       const data = snapshot.val();
       const messages = data ? Object.entries(data).map(([id, msg]) => ({ id, ...msg as Message })) : [];
       setMessages(messages);
     });
     return () => unsubscribe();
-  }, [roomId]);
+  }, []);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !user) return;
+    if (!newMessage.trim()) return;
 
-    await push(ref(realtimeDb, `messages/${roomId}`), {
+    await push(ref(realtimeDb, 'messages'), {
       text: newMessage,
       createdAt: Date.now(),
-      uid: user.uid,
-      displayName: user.displayName || 'Anonymous',
+      uid: user?.uid,
     });
 
     setNewMessage('');
@@ -47,13 +42,10 @@ const Chat: React.FC<ChatProps> = ({ roomId }) => {
 
   return (
     <Container className="mt-3">
-      <ListGroup className="mb-3 chat-messages" style={{ height: '400px', overflowY: 'auto' }}>
+      <ListGroup className="mb-3" style={{ height: '400px', overflowY: 'auto' }}>
         {messages.map((msg) => (
-          <ListGroup.Item 
-            key={msg.id} 
-            className={`message-bubble ${msg.uid === user?.uid ? 'sent' : 'received'}`}
-          >
-            <strong>{msg.displayName}: </strong>{msg.text}
+          <ListGroup.Item key={msg.id} className={msg.uid === user?.uid ? 'text-end' : ''}>
+            {msg.text}
           </ListGroup.Item>
         ))}
       </ListGroup>
