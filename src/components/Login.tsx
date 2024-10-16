@@ -45,6 +45,7 @@ const Login: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    autoComplete="email"
                   />
                 </Form.Group>
                 <Form.Group id="password" className="mb-3">
@@ -55,9 +56,10 @@ const Login: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    autoComplete="current-password"
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="w-100 mb-3">
+                <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
                   Log In
                 </Button>
               </Form>
