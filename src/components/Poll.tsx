@@ -1,137 +1,105 @@
 import React, { useState, useEffect } from 'react';
-import { ref, push, update, remove, onValue } from 'firebase/database';
+import { ref, set, onValue } from 'firebase/database';
 import { realtimeDb } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
+import { Button, Form } from 'react-bootstrap';
 
-interface PollItem {
-  id: string;
+interface PollOption {
   text: string;
   votes: number;
 }
 
 interface PollData {
-  id: string;
   topic: string;
-  items: PollItem[];
+  options: PollOption[];
   createdBy: string;
 }
 
 const Poll: React.FC = () => {
   const [user] = useAuthState(auth);
-  const [polls, setPolls] = useState<PollData[]>([]);
-  const [newPollTopic, setNewPollTopic] = useState('');
-  const [newPollItem, setNewPollItem] = useState('');
-  const [selectedPoll, setSelectedPoll] = useState<PollData | null>(null);
+  const [pollData, setPollData] = useState<PollData | null>(null);
+  const [topic, setTopic] = useState('');
+  const [options, setOptions] = useState<string[]>(['', '']);
 
   useEffect(() => {
-    const pollsRef = ref(realtimeDb, 'polls');
-    const unsubscribe = onValue(pollsRef, (snapshot) => {
+    const pollRef = ref(realtimeDb, 'poll');
+    const unsubscribe = onValue(pollRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const pollList = Object.entries(data).map(([key, value]: [string, any]) => ({
-          id: key,
-          ...value,
-        }));
-        setPolls(pollList);
+        setPollData(data);
       }
     });
 
     return () => unsubscribe();
   }, []);
 
+  const addOption = () => {
+    setOptions([...options, '']);
+  };
+
+  const handleOptionChange = (index: number, value: string) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
+    setOptions(newOptions);
+  };
+
   const createPoll = () => {
-    if (newPollTopic && user) {
-      const pollsRef = ref(realtimeDb, 'polls');
-      push(pollsRef, {
-        topic: newPollTopic,
-        items: [],
+    if (user && topic && options.filter(opt => opt.trim() !== '').length >= 2) {
+      const pollRef = ref(realtimeDb, 'poll');
+      set(pollRef, {
+        topic,
+        options: options.filter(opt => opt.trim() !== '').map(opt => ({ text: opt, votes: 0 })),
         createdBy: user.uid,
       });
-      setNewPollTopic('');
-    }
-  };
-
-  const addPollItem = () => {
-    if (selectedPoll && newPollItem) {
-      const pollRef = ref(realtimeDb, `polls/${selectedPoll.id}/items`);
-      push(pollRef, {
-        text: newPollItem,
-        votes: 0,
-      });
-      setNewPollItem('');
-    }
-  };
-
-  const vote = (pollId: string, itemId: string) => {
-    if (user) {
-      const itemRef = ref(realtimeDb, `polls/${pollId}/items/${itemId}`);
-      update(itemRef, {
-        votes: (selectedPoll?.items.find(item => item.id === itemId)?.votes || 0) + 1,
-      });
-    }
-  };
-
-  const deletePoll = (pollId: string) => {
-    if (user && (user.uid === selectedPoll?.createdBy || user.email === 'admin@example.com')) {
-      const pollRef = ref(realtimeDb, `polls/${pollId}`);
-      remove(pollRef);
-      setSelectedPoll(null);
-    }
-  };
-
-  const deletePollItem = (itemId: string) => {
-    if (selectedPoll && user && (user.uid === selectedPoll.createdBy || user.email === 'admin@example.com')) {
-      const itemRef = ref(realtimeDb, `polls/${selectedPoll.id}/items/${itemId}`);
-      remove(itemRef);
+      setTopic('');
+      setOptions(['', '']);
     }
   };
 
   return (
-    <div className="poll-container">
-      <h2>Polls</h2>
-      <div>
-        <input
-          type="text"
-          value={newPollTopic}
-          onChange={(e) => setNewPollTopic(e.target.value)}
-          placeholder="New poll topic"
-        />
-        <button onClick={createPoll}>Create Poll</button>
-      </div>
-      <ul>
-        {polls.map((poll) => (
-          <li key={poll.id} onClick={() => setSelectedPoll(poll)}>
-            {poll.topic}
-          </li>
+    <div className="poll-container p-4">
+      <h2 className="mb-4">Create Poll</h2>
+      <Form>
+        <Form.Group className="mb-3">
+          <Form.Label>Poll Topic</Form.Label>
+          <Form.Control
+            type="text"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder="Enter poll topic"
+          />
+        </Form.Group>
+        {options.map((option, index) => (
+          <Form.Group key={index} className="mb-3">
+            <Form.Label>Option {index + 1}</Form.Label>
+            <Form.Control
+              type="text"
+              value={option}
+              onChange={(e) => handleOptionChange(index, e.target.value)}
+              placeholder={`Enter option ${index + 1}`}
+            />
+          </Form.Group>
         ))}
-      </ul>
-      {selectedPoll && (
-        <div>
-          <h3>{selectedPoll.topic}</h3>
-          <ul>
-            {selectedPoll.items.map((item) => (
-              <li key={item.id}>
-                {item.text} - Votes: {item.votes}
-                <button onClick={() => vote(selectedPoll.id, item.id)}>Vote</button>
-                {(user?.uid === selectedPoll.createdBy || user?.email === 'admin@example.com') && (
-                  <button onClick={() => deletePollItem(item.id)}>Delete</button>
-                )}
+        <Button variant="secondary" onClick={addOption} className="me-2">
+          Add Option
+        </Button>
+        <Button variant="primary" onClick={createPoll}>
+          Create Poll
+        </Button>
+      </Form>
+
+      {pollData && (
+        <div className="mt-4">
+          <h3>{pollData.topic}</h3>
+          <ul className="list-group">
+            {pollData.options.map((option, index) => (
+              <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                {option.text}
+                <span className="badge bg-primary rounded-pill">{option.votes}</span>
               </li>
             ))}
           </ul>
-          <div>
-            <input
-              type="text"
-              value={newPollItem}
-              onChange={(e) => setNewPollItem(e.target.value)}
-              placeholder="New poll item"
-            />
-            <button onClick={addPollItem}>Add Item</button>
-          </div>
-          {(user?.uid === selectedPoll.createdBy || user?.email === 'admin@example.com') && (
-            <button onClick={() => deletePoll(selectedPoll.id)}>Delete Poll</button>
-          )}
         </div>
       )}
     </div>
