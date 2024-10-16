@@ -16,7 +16,6 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
-  // Fetch messages from Firebase Realtime Database using its APIs
   useEffect(() => {
     const messagesRef = query(ref(realtimeDb, 'messages'), orderByChild('createdAt'), limitToLast(50));
     const unsubscribe = onValue(messagesRef, (snapshot) => {
@@ -44,8 +43,18 @@ const Chat: React.FC = () => {
     <Container className="mt-3">
       <ListGroup className="mb-3" style={{ height: '400px', overflowY: 'auto' }}>
         {messages.map((msg) => (
-          <ListGroup.Item key={msg.id} className={msg.uid === user?.uid ? 'text-end' : ''}>
-            {msg.text}
+          <ListGroup.Item 
+            key={msg.id} 
+            className={`border-0 ${msg.uid === user?.uid ? 'text-end' : ''}`}
+          >
+            <div 
+              className={`d-inline-block p-2 rounded-pill ${
+                msg.uid === user?.uid ? 'bg-primary text-white' : 'bg-light'
+              }`}
+              style={{ maxWidth: '70%' }}
+            >
+              {msg.text}
+            </div>
           </ListGroup.Item>
         ))}
       </ListGroup>
