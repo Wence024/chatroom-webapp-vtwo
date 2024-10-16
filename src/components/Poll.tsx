@@ -15,6 +15,7 @@ interface PollData {
   topic: string;
   options: PollOption[];
   createdBy: string;
+  userVotes: { [userId: string]: number }; // Track user votes by option index
 }
 
 const Poll: React.FC = () => {
@@ -52,15 +53,48 @@ const Poll: React.FC = () => {
         topic,
         options: options.filter(opt => opt.trim() !== '').map(opt => ({ text: opt, votes: 0 })),
         createdBy: user.uid,
+        userVotes: {}, // Initialize user votes
       });
       setTopic('');
       setOptions(['', '']);
     }
   };
 
+  const vote = (optionIndex: number) => {
+    if (user && pollData) {
+      const userVotes = { ...pollData.userVotes };
+      const previousVote = userVotes[user.uid];
+
+      if (previousVote !== undefined) {
+        pollData.options[previousVote].votes -= 1; // Decrement previous vote
+      }
+
+      pollData.options[optionIndex].votes += 1; // Increment new vote
+      userVotes[user.uid] = optionIndex; // Record user's vote
+
+      const pollRef = ref(realtimeDb, 'poll');
+      set(pollRef, { ...pollData, userVotes });
+    }
+  };
+
+  const clearVote = () => {
+    if (user && pollData) {
+      const userVotes = { ...pollData.userVotes };
+      const previousVote = userVotes[user.uid];
+
+      if (previousVote !== undefined) {
+        pollData.options[previousVote].votes -= 1; // Decrement previous vote
+        delete userVotes[user.uid]; // Remove user's vote
+
+        const pollRef = ref(realtimeDb, 'poll');
+        set(pollRef, { ...pollData, userVotes });
+      }
+    }
+  };
+
   return (
     <Container className="d-flex align-items-center justify-content-center auth--container">
-        <div className="w-100 auth--div">
+      <div className="w-100 auth--div">
         <h2 className="mb-4">Create Poll</h2>
         <Form>
           <Form.Group className="mb-3">
@@ -99,9 +133,13 @@ const Poll: React.FC = () => {
                 <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                   {option.text}
                   <span className="badge bg-primary rounded-pill">{option.votes}</span>
+                  <Button variant="success" size="sm" onClick={() => vote(index)}>Vote</Button>
                 </li>
               ))}
             </ul>
+            <Button variant="danger" className="mt-2" onClick={clearVote}>
+              Clear Vote
+            </Button>
           </div>
         )}
       </div>
