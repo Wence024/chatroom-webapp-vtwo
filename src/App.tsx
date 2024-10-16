@@ -7,6 +7,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Chat from './components/Chat';
 import Header from './components/Header';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -16,7 +17,11 @@ const App: React.FC = () => {
       <Container fluid className="p-0">
         <Header />
         <Routes>
-          <Route path="/" element={user ? <Chat /> : <Login />} />
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          } />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           {/* Add more routes as needed */}
