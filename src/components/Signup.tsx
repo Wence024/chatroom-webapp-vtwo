@@ -1,39 +1,58 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, Alert, Container } from 'react-bootstrap';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import "../styles/Auth.css";
 
-const Login: React.FC = () => {
+const Signup: React.FC = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (password !== passwordConfirm) {
+      return setError("Passwords do not match");
+    }
+
     try {
       setError('');
-      if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
+      setLoading(true);
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate('/login');
     } catch (error) {
-      console.error("Authentication error:", error);
-      setError("Authentication failed. Please try again.");
+      console.error("Signup error:", error);
+      setError("Failed to create an account. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
     <>
-      <Container className="d-flex align-items-center justify-content-center app--container">
-        <div className="w-100 app--div">
+      <Container className="d-flex align-items-center justify-content-center auth--container">
+        <div className="w-100 auth--div">
           <Card>
             <Card.Body>
-              <h2 className="text-center mb-4">Login</h2>
+              <h2 className="text-center mb-4">Sign Up</h2>
               {error && <Alert variant="danger">{error}</Alert>}
-              <Form onSubmit={handleAuth}>
+              <Form onSubmit={handleSignup}>
+                <Form.Group id="name" className="mb-3">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </Form.Group>
                 <Form.Group id="email" className="mb-3">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
@@ -43,7 +62,7 @@ const Login: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-              </Form.Group>
+                </Form.Group>
                 <Form.Group id="password" className="mb-3">
                   <Form.Label>Password</Form.Label>
                   <Form.Control
@@ -53,15 +72,23 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
-              </Form.Group>
-                <Button variant="primary" type="submit" className="w-100 mb-3" disabled={false}>
-                  {isSignUp ? 'Sign Up' : 'Sign In'}
+                </Form.Group>
+                <Form.Group id="passwordConfirm" className="mb-3">
+                  <Form.Label>Password Confirmation</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={passwordConfirm}
+                    onChange={(e) => setPasswordConfirm(e.target.value)}
+                    required
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
+                  Sign Up
                 </Button>
               </Form>
-              <div className="w-100 text-center">
-                <Button variant="link" onClick={() => setIsSignUp(!isSignUp)}>
-                  {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-                </Button>
+              <div className="w-100 text-center mt-2">
+                Already have an account? <Link to="/login">Log in</Link>
               </div>
             </Card.Body>
           </Card>
@@ -71,4 +98,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Signup;
