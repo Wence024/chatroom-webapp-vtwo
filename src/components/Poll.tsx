@@ -3,7 +3,8 @@ import { ref, set, onValue } from 'firebase/database';
 import { realtimeDb } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Container, Form } from 'react-bootstrap';
+import "../styles/Auth.css"
 
 interface PollOption {
   text: string;
@@ -58,51 +59,53 @@ const Poll: React.FC = () => {
   };
 
   return (
-    <div className="poll-container p-4">
-      <h2 className="mb-4">Create Poll</h2>
-      <Form>
-        <Form.Group className="mb-3">
-          <Form.Label>Poll Topic</Form.Label>
-          <Form.Control
-            type="text"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder="Enter poll topic"
-          />
-        </Form.Group>
-        {options.map((option, index) => (
-          <Form.Group key={index} className="mb-3">
-            <Form.Label>Option {index + 1}</Form.Label>
+    <Container className="d-flex align-items-center justify-content-center auth--container">
+        <div className="w-100 auth--div">
+        <h2 className="mb-4">Create Poll</h2>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Poll Topic</Form.Label>
             <Form.Control
               type="text"
-              value={option}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              placeholder={`Enter option ${index + 1}`}
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="Enter poll topic"
             />
           </Form.Group>
-        ))}
-        <Button variant="secondary" onClick={addOption} className="me-2">
-          Add Option
-        </Button>
-        <Button variant="primary" onClick={createPoll}>
-          Create Poll
-        </Button>
-      </Form>
+          {options.map((option, index) => (
+            <Form.Group key={index} className="mb-3">
+              <Form.Label>Option {index + 1}</Form.Label>
+              <Form.Control
+                type="text"
+                value={option}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                placeholder={`Enter option ${index + 1}`}
+              />
+            </Form.Group>
+          ))}
+          <Button variant="secondary" onClick={addOption} className="me-2">
+            Add Option
+          </Button>
+          <Button variant="primary" onClick={createPoll}>
+            Create Poll
+          </Button>
+        </Form>
 
-      {pollData && (
-        <div className="mt-4">
-          <h3>{pollData.topic}</h3>
-          <ul className="list-group">
-            {pollData.options.map((option, index) => (
-              <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                {option.text}
-                <span className="badge bg-primary rounded-pill">{option.votes}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+        {pollData && (
+          <div className="mt-4">
+            <h3>{pollData.topic}</h3>
+            <ul className="list-group">
+              {pollData.options.map((option, index) => (
+                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                  {option.text}
+                  <span className="badge bg-primary rounded-pill">{option.votes}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </Container>
   );
 };
 
