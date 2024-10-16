@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, Alert, Container } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import "../styles/Auth.css";
 
@@ -25,8 +25,7 @@ const Signup: React.FC = () => {
     try {
       setError('');
       setLoading(true);
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(userCredential.user, { displayName: name });
+      await createUserWithEmailAndPassword(auth, email, password);
       navigate('/login');
     } catch (error) {
       console.error("Signup error:", error);

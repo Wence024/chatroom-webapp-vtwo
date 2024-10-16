@@ -8,7 +8,6 @@ import Signup from './components/Signup';
 import Chat from './components/Chat';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
-import Poll from './components/Poll';
 
 const App: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -25,11 +24,7 @@ const App: React.FC = () => {
           } />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/polls" element={
-            <ProtectedRoute>
-              <Poll />
-            </ProtectedRoute>
-          } />
+          {/* Add more routes as needed */}
         </Routes>
       </Container>
     </Router>
