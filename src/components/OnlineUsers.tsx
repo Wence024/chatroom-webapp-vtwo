@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { ref, onValue } from 'firebase/database';
-import { realtimeDb } from '../firebase';
+import { realtimeDb } from '../firebase/firebaseConfig';
 
 interface OnlineUser {
   id: string;

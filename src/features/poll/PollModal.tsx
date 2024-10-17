@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ref, onValue, set } from 'firebase/database';
-import { realtimeDb } from '../firebase';
+import { realtimeDb } from '../../firebase/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase';
+import { auth } from '../../firebase/firebaseConfig';
 import { Button, Modal } from 'react-bootstrap';
 import NewPollModal from './NewPollModal'; // Import the NewPollModal
 

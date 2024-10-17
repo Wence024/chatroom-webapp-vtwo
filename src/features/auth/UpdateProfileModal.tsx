@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase';
+import { auth } from '../../firebase/firebaseConfig';
 import { updateProfile, updateEmail, updatePassword } from 'firebase/auth';
 
 interface UpdateProfileModalProps {

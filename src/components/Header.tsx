@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, Container, Button } from 'react-bootstrap';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase';
+import { auth } from '../firebase/firebaseConfig';
 import { signOut } from 'firebase/auth';
 
 const Header: React.FC = () => {

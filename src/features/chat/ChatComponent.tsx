@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, ListGroup } from 'react-bootstrap';
 import { ref, push, query, orderByChild, limitToLast, onValue } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, realtimeDb } from '../firebase';
-import PollModal from './PollModal';
+import { auth, realtimeDb } from '../../firebase/firebaseConfig';
+import PollModal from '../poll/PollModal';
 import { Send, Vote } from 'lucide-react';
 
 interface Message {

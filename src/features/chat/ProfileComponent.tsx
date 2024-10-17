@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase';
+import { auth } from '../../firebase/firebaseConfig';
 import { Button } from 'react-bootstrap';
 import { signOut } from 'firebase/auth';
-import UpdateProfileModal from './UpdateProfileModal';
+import UpdateProfileModal from '../auth/UpdateProfileModal';
 
 const Profile: React.FC = () => {
   const [user] = useAuthState(auth);

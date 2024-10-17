@@ -1,6 +1,6 @@
 import React from 'react';
-import Chat from './Chat';
-import Profile from './Profile';
+import Chat from '../features/chat/ChatComponent';
+import Profile from '../features/chat/ProfileComponent';
 import OnlineUsers from './OnlineUsers';
 import { Card } from 'react-bootstrap';
 
