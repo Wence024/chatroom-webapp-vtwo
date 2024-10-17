@@ -14,15 +14,22 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
   const [name, setName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
+    if (password !== passwordConfirm) {
+      return setError("Passwords do not match");
+    }
+
     try {
+      setLoading(true);
       if (user) {
         if (name !== user.displayName) {
           await updateProfile(user, { displayName: name });
@@ -42,6 +49,8 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
     } catch (error) {
       setError('Failed to update profile. Please try again.');
       console.error('Update profile error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +67,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter name"
+              placeholder="Your new name..."
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -67,22 +76,33 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
-              placeholder="Enter email"
+              placeholder="Your new email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>New Password (leave blank to keep current)</Form.Label>
+            <Form.Label>New Password</Form.Label>
             <Form.Control
               type="password"
-              placeholder="New Password"
+              placeholder="Leave blank to keep current..."
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
             />
           </Form.Group>
-          <Button variant="primary" type="submit">
-            Update Profile
+          <Form.Group className="mb-3">
+            <Form.Label>Confirm Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Confirm new password"
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              autoComplete="new-password"
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? 'Updating...' : 'Update Profile'}
           </Button>
         </Form>
       </Modal.Body>
