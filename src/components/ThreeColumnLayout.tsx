@@ -1,7 +1,6 @@
 import React from 'react';
 import Chat from '../features/chat/ChatComponent';
 import Profile from '../features/chat/ProfileComponent';
-import OnlineUsers from './OnlineUsers';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 
 const ThreeColumnLayout: React.FC = () => {
@@ -11,7 +10,6 @@ const ThreeColumnLayout: React.FC = () => {
         <Col xl={3} className="d-none d-xl-block mb-3">
           <Card className="h-100 bg-dark text-light">
             <Card.Body>
-              <OnlineUsers />
             </Card.Body>
           </Card>
         </Col>
