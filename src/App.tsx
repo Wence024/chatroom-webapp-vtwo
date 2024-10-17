@@ -6,7 +6,6 @@ import { auth } from './firebase';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Chat from './components/Chat';
-import Poll from './components/Poll';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -19,7 +18,6 @@ const App: React.FC = () => {
         <Header />
         <Routes>
             <Route path="/" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
-            <Route path="/polls" element={<ProtectedRoute><Poll /></ProtectedRoute>} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           {/* Add more routes as needed */}

@@ -3,6 +3,7 @@ import { Container, Form, Button, ListGroup } from 'react-bootstrap';
 import { ref, push, query, orderByChild, limitToLast, onValue } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, realtimeDb } from '../firebase';
+import PollModal from './PollModal'; // Import the PollModal component
 
 interface Message {
   id: string;
@@ -15,6 +16,7 @@ const Chat: React.FC = () => {
   const [user] = useAuthState(auth);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [showPollModal, setShowPollModal] = useState(false); // State to control modal visibility
 
   // Fetch messages from Firebase Realtime Database using its APIs
   useEffect(() => {
@@ -61,7 +63,12 @@ const Chat: React.FC = () => {
         <Button variant="primary" type="submit">
           Send
         </Button>
+        <Button variant="secondary" className="ms-2" onClick={() => setShowPollModal(true)}>
+          Open Poll
+        </Button>
       </Form>
+
+      <PollModal show={showPollModal} handleClose={() => setShowPollModal(false)} />
     </Container>
   );
 };
