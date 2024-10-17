@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import { Container } from 'react-bootstrap';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
