@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Form, Button, ListGroup } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { ref as firebaseRef, push, query, orderByChild, limitToLast, onValue } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, realtimeDb } from '../../firebase/firebaseConfig';
@@ -19,7 +19,7 @@ const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [showPollModal, setShowPollModal] = useState(false);
-  const endOfMessagesRef = useRef<HTMLAnchorElement | null>(null);
+  const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -54,20 +54,20 @@ const Chat: React.FC = () => {
   return (
     <div className="chat-container">
       <h2 className="chat-header text-light">Chat</h2>
-      <ListGroup 
+      <div 
         className="message-list bg-dark" 
         ref={messagesContainerRef}
       >
         {messages.map((msg, index) => (
-          <ListGroup.Item 
+          <div 
             key={msg.id} 
             ref={index === messages.length - 1 ? endOfMessagesRef : null}
             className={`message-item ${msg.uid === user?.uid ? 'message-item-self' : 'message-item-other'}`}
           >
             {msg.text}
-          </ListGroup.Item>
+          </div>
         ))}
-      </ListGroup>
+      </div>
       <Form onSubmit={sendMessage} className="form-container">
         <div className="d-flex">
           <Form.Control

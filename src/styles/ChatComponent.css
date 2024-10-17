@@ -16,6 +16,7 @@
   max-height: calc(100vh - 250px);
   background-color: #212529;
   border: 1px solid #333;
+  padding: 1rem;
 }
 
 .message-item {
@@ -27,13 +28,14 @@
 }
 
 .message-item-self {
-  align-self: end;
+  align-self: flex-end;
   background-color: #00bcd4;
   color: #ffffff;
+  margin-left: auto;
 }
 
 .message-item-other {
-  align-self: start;
+  align-self: flex-start;
   background-color: #2c3034;
   color: #b0b0b0;
 }
@@ -44,24 +46,45 @@
 
 .form-control {
   margin-right: 0.5rem;
-  background-color: #2c3034;
-  border-color: #333;
-  color: #b0b0b0;
+  background-color: #2c3034 !important;
+  border-color: #333 !important;
+  color: #b0b0b0 !important;
 }
 
 .form-control:focus {
-  background-color: #2c3034;
-  border-color: #00bcd4;
-  color: #b0b0b0;
+  background-color: #2c3034 !important;
+  border-color: #00bcd4 !important;
+  color: #b0b0b0 !important;
 }
 
 .send-button {
   margin-right: 0.5rem;
-  background-color: #00bcd4;
-  border-color: #00bcd4;
+  background-color: #00bcd4 !important;
+  border-color: #00bcd4 !important;
 }
 
 .send-button:hover {
-  background-color: #0097a7;
-  border-color: #0097a7;
+  background-color: #0097a7 !important;
+  border-color: #0097a7 !important;
+}
+
+/* Override Bootstrap styles */
+.btn-primary {
+  background-color: #00bcd4 !important;
+  border-color: #00bcd4 !important;
+}
+
+.btn-primary:hover {
+  background-color: #0097a7 !important;
+  border-color: #0097a7 !important;
+}
+
+.btn-secondary {
+  background-color: #2c3034 !important;
+  border-color: #333 !important;
+}
+
+.btn-secondary:hover {
+  background-color: #23272b !important;
+  border-color: #1d2124 !important;
 }
