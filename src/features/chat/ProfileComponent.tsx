@@ -20,7 +20,6 @@ const Profile: React.FC = () => {
       <h2 className="mb-4">Profile</h2>
       {user && (
         <>
-          <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Display Name:</strong> {user.displayName || 'Not set'}</p>
           <Button variant="primary" className="mb-2 w-100" onClick={() => setShowUpdateModal(true)}>Update Profile</Button>
           <Button variant="danger" onClick={handleSignOut} className="w-100">Sign Out</Button>
