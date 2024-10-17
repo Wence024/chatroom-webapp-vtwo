@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, ListGroup } from 'react-bootstrap';
+import { Form, Button, ListGroup } from 'react-bootstrap';
 import { ref, push, query, orderByChild, limitToLast, onValue } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, realtimeDb } from '../firebase';
@@ -40,15 +40,16 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <Container className="mt-3">
-      <ListGroup className="mb-3" style={{ height: '400px', overflowY: 'auto' }}>
+    <div className="d-flex flex-column h-100">
+      <h2 className="mb-3">Chat</h2>
+      <ListGroup className="mb-3 flex-grow-1 overflow-auto" style={{ maxHeight: 'calc(100vh - 250px)' }}>
         {messages.map((msg) => (
           <ListGroup.Item key={msg.id} className={msg.uid === user?.uid ? 'text-end' : ''}>
             {msg.text}
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <Form onSubmit={sendMessage}>
+      <Form onSubmit={sendMessage} className="mt-auto">
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Control
             type="text"
@@ -61,7 +62,7 @@ const Chat: React.FC = () => {
           Send
         </Button>
       </Form>
-    </Container>
+    </div>
   );
 };
 

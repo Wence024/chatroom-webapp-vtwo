@@ -15,13 +15,13 @@ const Profile: React.FC = () => {
 
   return (
     <div className="profile-section">
-      <h3>Profile</h3>
+      <h2 className="mb-4">Profile</h2>
       {user && (
         <>
-          <p>Email: {user.email}</p>
-          <p>Display Name: {user.displayName || 'Not set'}</p>
-          <Button variant="primary" className="mb-2">Update Profile</Button>
-          <Button variant="danger" onClick={handleSignOut}>Sign Out</Button>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Display Name:</strong> {user.displayName || 'Not set'}</p>
+          <Button variant="primary" className="mb-2 w-100">Update Profile</Button>
+          <Button variant="danger" onClick={handleSignOut} className="w-100">Sign Out</Button>
         </>
       )}
     </div>
