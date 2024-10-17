@@ -39,7 +39,7 @@ const Signup: React.FC = () => {
     <>
       <Container className="d-flex align-items-center justify-content-center auth--container">
         <div className="w-100 auth--div">
-          <Card>
+          <Card className="bg-dark text-light">
             <Card.Body>
               <h2 className="text-center mb-4">Sign Up</h2>
               {error && <Alert variant="danger">{error}</Alert>}
@@ -53,6 +53,7 @@ const Signup: React.FC = () => {
                     onChange={(e) => setName(e.target.value)}
                     required
                     autoComplete="name"
+                    className="bg-dark text-light border-secondary"
                   />
                 </Form.Group>
                 <Form.Group id="email" className="mb-3">
@@ -64,6 +65,7 @@ const Signup: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     autoComplete="email"
+                    className="bg-dark text-light border-secondary"
                   />
                 </Form.Group>
                 <Form.Group id="password" className="mb-3">
@@ -74,7 +76,8 @@ const Signup: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    autoComplete="current-password"
+                    autoComplete="new-password"
+                    className="bg-dark text-light border-secondary"
                   />
                 </Form.Group>
                 <Form.Group id="passwordConfirm" className="mb-3">
@@ -86,6 +89,7 @@ const Signup: React.FC = () => {
                     onChange={(e) => setPasswordConfirm(e.target.value)}
                     required
                     autoComplete="new-password"
+                    className="bg-dark text-light border-secondary"
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
@@ -93,7 +97,7 @@ const Signup: React.FC = () => {
                 </Button>
               </Form>
               <div className="w-100 text-center mt-2">
-                Already have an account? <Link to="/login">Log in</Link>
+                Already have an account? <Link to="/login" className="text-primary">Log in</Link>
               </div>
             </Card.Body>
           </Card>

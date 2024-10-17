@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     <>
       <Container className="d-flex align-items-center justify-content-center auth--container">
         <div className="w-100 auth--div">
-          <Card>
+          <Card className="bg-dark text-light">
             <Card.Body>
               <h2 className="text-center mb-4">Login</h2>
               {error && <Alert variant="danger">{error}</Alert>}
@@ -46,6 +46,7 @@ const Login: React.FC = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     autoComplete="email"
+                    className="bg-dark text-light border-secondary"
                   />
                 </Form.Group>
                 <Form.Group id="password" className="mb-3">
@@ -57,6 +58,7 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     autoComplete="current-password"
+                    className="bg-dark text-light border-secondary"
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
@@ -64,7 +66,7 @@ const Login: React.FC = () => {
                 </Button>
               </Form>
               <div className="w-100 text-center mt-2">
-                Need an account? <Link to="/signup">Sign Up</Link>
+                Need an account? <Link to="/signup" className="text-primary">Sign Up</Link>
               </div>
             </Card.Body>
           </Card>

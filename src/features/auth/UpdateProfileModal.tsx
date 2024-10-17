@@ -55,11 +55,11 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Update Profile</Modal.Title>
+    <Modal show={show} onHide={handleClose} centered className="text-light">
+      <Modal.Header closeButton className="bg-dark border-secondary">
+        <Modal.Title className="text-light">Update Profile</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="bg-dark">
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
         <Form onSubmit={handleSubmit}>
@@ -70,6 +70,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
               placeholder="Your new name..."
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className="bg-dark text-light border-secondary"
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -79,6 +80,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
               placeholder="Your new email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="bg-dark text-light border-secondary"
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -89,6 +91,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
+              className="bg-dark text-light border-secondary"
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -99,6 +102,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
               autoComplete="new-password"
+              className="bg-dark text-light border-secondary"
             />
           </Form.Group>
           <Button variant="primary" type="submit" disabled={loading}>
