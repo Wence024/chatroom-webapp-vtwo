@@ -18,7 +18,6 @@ const Chat: React.FC = () => {
   const [newMessage, setNewMessage] = useState('');
   const [showPollModal, setShowPollModal] = useState(false); // State to control modal visibility
 
-  // Fetch messages from Firebase Realtime Database using its APIs
   useEffect(() => {
     const messagesRef = query(ref(realtimeDb, 'messages'), orderByChild('createdAt'), limitToLast(50));
     const unsubscribe = onValue(messagesRef, (snapshot) => {

@@ -1,25 +1,11 @@
-import React, { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
-import { updateProfile, signOut } from 'firebase/auth';
+import { Button } from 'react-bootstrap';
+import { signOut } from 'firebase/auth';
 
 const Profile: React.FC = () => {
   const [user] = useAuthState(auth);
-  const [isEditing, setIsEditing] = useState(false);
-  const [newDisplayName, setNewDisplayName] = useState(user?.displayName || '');
-
-  const handleUpdateProfile = async () => {
-    if (user) {
-      try {
-        await updateProfile(user, { displayName: newDisplayName });
-        setIsEditing(false);
-      } catch (error) {
-        console.error("Error updating profile:", error);
-        alert("Failed to update profile. Please try again.");
-      }
-    }
-  };
 
   const handleSignOut = () => {
     signOut(auth).catch((error) => {
@@ -33,26 +19,9 @@ const Profile: React.FC = () => {
       {user && (
         <>
           <p>Email: {user.email}</p>
-          {isEditing ? (
-            <Form onSubmit={(e) => { e.preventDefault(); handleUpdateProfile(); }}>
-              <Form.Group className="mb-3">
-                <Form.Label>Display Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={newDisplayName}
-                  onChange={(e) => setNewDisplayName(e.target.value)}
-                />
-              </Form.Group>
-              <Button variant="primary" type="submit">Save</Button>
-              <Button variant="secondary" onClick={() => setIsEditing(false)}>Cancel</Button>
-            </Form>
-          ) : (
-            <>
-              <p>Display Name: {user.displayName || 'Not set'}</p>
-              <Button variant="primary" onClick={() => setIsEditing(true)}>Update Profile</Button>
-            </>
-          )}
-          <Button variant="danger" onClick={handleSignOut} className="mt-3">Sign Out</Button>
+          <p>Display Name: {user.displayName || 'Not set'}</p>
+          <Button variant="primary" className="mb-2">Update Profile</Button>
+          <Button variant="danger" onClick={handleSignOut}>Sign Out</Button>
         </>
       )}
     </div>
