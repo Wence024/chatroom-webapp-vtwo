@@ -5,7 +5,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, realtimeDb } from '../../firebase/firebaseConfig';
 import PollModal from '../poll/PollModal';
 import { Send, Vote } from 'lucide-react';
-import '../../styles/ChatComponent.css'; // Import the CSS file
+import '../../styles/ChatComponent.css';
 
 interface Message {
   id: string;
@@ -53,9 +53,9 @@ const Chat: React.FC = () => {
 
   return (
     <div className="chat-container">
-      <h2 className="chat-header">Chat</h2>
+      <h2 className="chat-header text-light">Chat</h2>
       <ListGroup 
-        className="message-list" 
+        className="message-list bg-dark" 
         ref={messagesContainerRef}
       >
         {messages.map((msg, index) => (
@@ -75,7 +75,7 @@ const Chat: React.FC = () => {
             placeholder="Type a message"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className="form-control"
+            className="form-control bg-dark text-light border-secondary"
           />
           <Button variant="primary" type="submit" className="send-button">
             <Send size={20} />

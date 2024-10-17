@@ -4,7 +4,7 @@ import { realtimeDb } from '../../firebase/firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase/firebaseConfig';
 import { Button, Modal } from 'react-bootstrap';
-import NewPollModal from './NewPollModal'; // Import the NewPollModal
+import NewPollModal from './NewPollModal';
 
 interface PollOption {
   text: string;
@@ -83,20 +83,20 @@ const PollModal: React.FC<PollModalProps> = ({ show, handleClose }) => {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Poll</Modal.Title>
+      <Modal show={show} onHide={handleClose} centered className="text-light">
+        <Modal.Header closeButton className="bg-dark border-secondary">
+          <Modal.Title className="text-light">Poll</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="bg-dark">
           {pollData ? (
             <div>
-              <h3>{pollData.topic}</h3>
+              <h3 className="text-light">{pollData.topic}</h3>
               <ul className="list-group">
                 {pollData.options.map((option, index) => (
-                  <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                  <li key={index} className="list-group-item d-flex justify-content-between align-items-center bg-dark text-light border-secondary">
                     {option.text}
                     <span className="badge bg-primary rounded-pill">{option.votes}</span>
-                    <Button variant="success" size="sm" onClick={() => vote(index)}>Vote</Button>
+                    <Button variant="outline-primary" size="sm" onClick={() => vote(index)}>Vote</Button>
                   </li>
                 ))}
               </ul>
@@ -105,9 +105,9 @@ const PollModal: React.FC<PollModalProps> = ({ show, handleClose }) => {
               </Button>
             </div>
           ) : (
-            <p>No poll data available.</p>
+            <p className="text-light">No poll data available.</p>
           )}
-          <Button variant="secondary" className="mt-3" onClick={() => setShowNewPollModal(true)}>
+          <Button variant="primary" className="mt-3" onClick={() => setShowNewPollModal(true)}>
             Create New Poll
           </Button>
         </Modal.Body>
@@ -116,7 +116,7 @@ const PollModal: React.FC<PollModalProps> = ({ show, handleClose }) => {
       <NewPollModal 
         show={showNewPollModal} 
         handleClose={() => setShowNewPollModal(false)} 
-        onPollCreated={fetchPollData} // Call fetchPollData to refresh poll data
+        onPollCreated={fetchPollData}
       />
     </>
   );
