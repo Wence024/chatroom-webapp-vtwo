@@ -24,7 +24,6 @@ const Header: React.FC = () => {
               <Navbar.Text className="me-3">
                 Signed in as: {user.email}
               </Navbar.Text>
-              <Button variant="outline-light" onClick={handleSignOut}>Sign Out</Button>
             </>
           ) : (
             <Navbar.Text>Not signed in</Navbar.Text>
