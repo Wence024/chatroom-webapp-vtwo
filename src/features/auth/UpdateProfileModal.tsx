@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase/firebaseConfig';
-import { updateProfile, updateEmail, updatePassword } from 'firebase/auth';
+import { updateProfile, updateEmail, updatePassword, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 interface UpdateProfileModalProps {
   show: boolean;
@@ -11,13 +12,16 @@ interface UpdateProfileModalProps {
 
 const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClose }) => {
   const [user] = useAuthState(auth);
+  
   const [name, setName] = useState(user?.displayName || '');
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +49,8 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({ show, handleClo
           handleClose();
           setSuccess('');
         }, 2000);
+        signOut(auth);
+        navigate('/login');
       }
     } catch (error) {
       setError('Failed to update profile. Please try again.');
