@@ -5,6 +5,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, realtimeDb } from '../../firebase/firebaseConfig';
 import PollModal from '../poll/PollModal';
 import { Send, Vote } from 'lucide-react';
+import '../../styles/ChatComponent.css'; // Import the CSS file
 
 interface Message {
   id: string;
@@ -32,7 +33,6 @@ const Chat: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Scroll into view logic applied only to the chat messages container
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
@@ -52,39 +52,32 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="d-flex flex-column h-100">
-      <h2 className="mb-3">Chat</h2>
+    <div className="chat-container">
+      <h2 className="chat-header">Chat</h2>
       <ListGroup 
-        className="mb-3 flex-grow-1 overflow-auto" 
-        style={{ maxHeight: 'calc(100vh - 250px)' }}
-        ref={messagesContainerRef}  // Attach ref here
+        className="message-list" 
+        ref={messagesContainerRef}
       >
         {messages.map((msg, index) => (
           <ListGroup.Item 
             key={msg.id} 
             ref={index === messages.length - 1 ? endOfMessagesRef : null}
-            className={`border-0 ${msg.uid === user?.uid ? 'align-self-end bg-primary text-white' : 'align-self-start bg-light'}`}
-            style={{
-              maxWidth: '70%',
-              borderRadius: '20px',
-              padding: '10px 15px',
-              margin: '5px 0',
-            }}
+            className={`message-item ${msg.uid === user?.uid ? 'message-item-self' : 'message-item-other'}`}
           >
             {msg.text}
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <Form onSubmit={sendMessage} className="mt-auto">
+      <Form onSubmit={sendMessage} className="form-container">
         <div className="d-flex">
           <Form.Control
             type="text"
             placeholder="Type a message"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            className="me-2"
+            className="form-control"
           />
-          <Button variant="primary" type="submit" className="me-2">
+          <Button variant="primary" type="submit" className="send-button">
             <Send size={20} />
           </Button>
           <Button variant="secondary" onClick={() => setShowPollModal(true)}>

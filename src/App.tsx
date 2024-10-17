@@ -14,7 +14,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <Container fluid className="p-0">
+      <Container fluid>
         <Header />
         <Routes>
           <Route path="/" element={<ProtectedRoute><ThreeColumnLayout /></ProtectedRoute>} />
