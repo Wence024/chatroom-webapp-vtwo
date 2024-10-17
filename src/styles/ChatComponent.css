@@ -21,11 +21,13 @@
 
 .message-item {
   border: 0;
-  display: inline-block;
+  display: block;
+  width: fit-content;
   max-width: 70%;
   border-radius: 20px;
   padding: 10px 15px;
   margin: 5px 0;
+  word-wrap: break-word;
 }
 
 .message-item-self {
