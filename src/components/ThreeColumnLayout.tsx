@@ -1,6 +1,7 @@
 import React from 'react';
 import Chat from './Chat';
 import Profile from './Profile';
+import OnlineUsers from './OnlineUsers';
 import { Card } from 'react-bootstrap';
 
 const ThreeColumnLayout: React.FC = () => {
@@ -10,8 +11,7 @@ const ThreeColumnLayout: React.FC = () => {
         <div className="col-md-3">
           <Card className="h-100">
             <Card.Body>
-              <h2 className="mb-4">Chat Rooms</h2>
-              {/* Add chat room list here */}
+              <OnlineUsers />
             </Card.Body>
           </Card>
         </div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, ListGroup } from 'react-bootstrap';
+import { Form, Button, ListGroup } from 'react-bootstrap';
 import { ref, push, query, orderByChild, limitToLast, onValue } from 'firebase/database';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, realtimeDb } from '../firebase';
-import PollModal from './PollModal'; // Import the PollModal component
+import PollModal from './PollModal';
+import { Send, Vote } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -16,7 +17,7 @@ const Chat: React.FC = () => {
   const [user] = useAuthState(auth);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [showPollModal, setShowPollModal] = useState(false); // State to control modal visibility
+  const [showPollModal, setShowPollModal] = useState(false);
 
   useEffect(() => {
     const messagesRef = query(ref(realtimeDb, 'messages'), orderByChild('createdAt'), limitToLast(50));
@@ -42,33 +43,43 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <Container className="mt-3">
-      <ListGroup className="mb-3" style={{ height: '400px', overflowY: 'auto' }}>
+    <div className="d-flex flex-column h-100">
+      <h2 className="mb-3">Chat</h2>
+      <ListGroup className="mb-3 flex-grow-1 overflow-auto" style={{ maxHeight: 'calc(100vh - 250px)' }}>
         {messages.map((msg) => (
-          <ListGroup.Item key={msg.id} className={msg.uid === user?.uid ? 'text-end' : ''}>
+          <ListGroup.Item 
+            key={msg.id} 
+            className={`border-0 ${msg.uid === user?.uid ? 'align-self-end bg-primary text-white' : 'align-self-start bg-light'}`}
+            style={{
+              maxWidth: '70%',
+              borderRadius: '20px',
+              padding: '10px 15px',
+              margin: '5px 0',
+            }}
+          >
             {msg.text}
           </ListGroup.Item>
         ))}
       </ListGroup>
-      <Form onSubmit={sendMessage}>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form onSubmit={sendMessage} className="mt-auto">
+        <div className="d-flex">
           <Form.Control
             type="text"
             placeholder="Type a message"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            className="me-2"
           />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Send
-        </Button>
-        <Button variant="secondary" className="ms-2" onClick={() => setShowPollModal(true)}>
-          Open Poll
-        </Button>
+          <Button variant="primary" type="submit" className="me-2">
+            <Send size={20} />
+          </Button>
+          <Button variant="secondary" onClick={() => setShowPollModal(true)}>
+            <Vote size={20} />
+          </Button>
+        </div>
       </Form>
-
       <PollModal show={showPollModal} handleClose={() => setShowPollModal(false)} />
-    </Container>
+    </div>
   );
 };
 
