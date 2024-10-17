@@ -8,21 +8,21 @@ const ThreeColumnLayout: React.FC = () => {
   return (
     <Container fluid className='pt-4 h-100'>
       <Row>
-        <Col md={3}>
+        <Col lg={3} className="d-none d-lg-block mb-3">
           <Card className="h-100 bg-dark text-light">
             <Card.Body>
               <OnlineUsers />
             </Card.Body>
           </Card>
         </Col>
-        <Col md={6}>
+        <Col xs={12} lg={6} className="mb-3">
           <Card className="h-100 bg-dark text-light">
             <Card.Body>
               <Chat />
             </Card.Body>
           </Card>
         </Col>
-        <Col md={3}>
+        <Col xs={12} md={6} lg={3}>
           <Card className="h-100 bg-dark text-light">
             <Card.Body>
               <Profile />
