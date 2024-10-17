@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -11,7 +12,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+console.log('Firebase Config:', firebaseConfig); // Temporary log for debugging
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const realtimeDb = getDatabase(app);
-// Enable email/password sign-in method in Firebase Console
