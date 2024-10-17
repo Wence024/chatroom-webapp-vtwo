@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, Alert, Container } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 import "../styles/Auth.css";
 
@@ -26,6 +26,7 @@ const Signup: React.FC = () => {
       setError('');
       setLoading(true);
       await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(auth.currentUser, { displayName: name});
       navigate('/login');
     } catch (error) {
       console.error("Signup error:", error);
@@ -51,6 +52,7 @@ const Signup: React.FC = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    autoComplete="name"
                   />
                 </Form.Group>
                 <Form.Group id="email" className="mb-3">
@@ -61,6 +63,7 @@ const Signup: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    autoComplete="email"
                   />
                 </Form.Group>
                 <Form.Group id="password" className="mb-3">
@@ -71,6 +74,7 @@ const Signup: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    autoComplete="current-password"
                   />
                 </Form.Group>
                 <Form.Group id="passwordConfirm" className="mb-3">
@@ -81,6 +85,7 @@ const Signup: React.FC = () => {
                     value={passwordConfirm}
                     onChange={(e) => setPasswordConfirm(e.target.value)}
                     required
+                    autoComplete="new-password"
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit" className="w-100 mb-3" disabled={loading}>
