@@ -30,11 +30,21 @@
   word-wrap: break-word;
 }
 
+.message-username {
+  font-size: 0.8em;
+  color: #a0a0a0;
+  margin-bottom: 2px;
+}
+
 .message-item-self {
   align-self: flex-end;
   background-color: #00bcd4;
   color: #ffffff;
   margin-left: auto;
+}
+
+.message-item-self .message-username {
+  text-align: right;
 }
 
 .message-item-other {

@@ -12,6 +12,7 @@ interface Message {
   text: string;
   uid: string;
   createdAt: number;
+  displayName: string; // Add this line
 }
 
 const Chat: React.FC = () => {
@@ -46,6 +47,7 @@ const Chat: React.FC = () => {
       text: newMessage,
       createdAt: Date.now(),
       uid: user?.uid,
+      displayName: user?.displayName || 'Anonymous', // Add this line
     });
 
     setNewMessage('');
@@ -64,7 +66,8 @@ const Chat: React.FC = () => {
             ref={index === messages.length - 1 ? endOfMessagesRef : null}
             className={`message-item ${msg.uid === user?.uid ? 'message-item-self' : 'message-item-other'}`}
           >
-            {msg.text}
+            <div className="message-username">{msg.displayName}</div>
+            <div className="message-text">{msg.text}</div>
           </div>
         ))}
       </div>
