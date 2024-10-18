@@ -12,7 +12,7 @@ interface Message {
   text: string;
   uid: string;
   createdAt: number;
-  displayName: string; // Add this line
+  displayName: string;
 }
 
 const Chat: React.FC = () => {
@@ -28,6 +28,7 @@ const Chat: React.FC = () => {
     const unsubscribe = onValue(messagesRef, (snapshot) => {
       const data = snapshot.val();
       const messages = data ? Object.entries(data).map(([id, msg]) => ({ id, ...msg as Message })) : [];
+      console.log('Retrieved messages:', messages); // Add this line
       setMessages(messages);
     });
     return () => unsubscribe();
@@ -43,11 +44,13 @@ const Chat: React.FC = () => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
+    console.log('Current user:', user); // Add this line
+
     await push(firebaseRef(realtimeDb, 'messages'), {
       text: newMessage,
       createdAt: Date.now(),
       uid: user?.uid,
-      displayName: user?.displayName || 'Anonymous', // Add this line
+      displayName: user?.displayName || 'Anonymous',
     });
 
     setNewMessage('');
